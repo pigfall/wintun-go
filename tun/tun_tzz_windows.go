@@ -4,11 +4,28 @@ import(
 	"fmt"
 	"golang.zx2c4.com/wireguard/tun/wintun"
 	"golang.org/x/sys/windows"
+	"net"
 )
 
 
 func NewTun(ifname string,mtu int)(Device,error){
-	wt, err := wintun.CreateAdapter("" ,ifname,nil)
+	allIfces,err := net.Interfaces()
+	if err != nil{
+		return nil, err
+	}
+	var ifceExist bool
+	for _,ifce := range allIfces{
+		if ifce.Name == ifname{
+			ifceExist = true
+			break
+		}
+	}
+	var wt *wintun.Adapter
+	if ifceExist{
+		wt, err = wintun.OpenAdapter(ifname)
+	}else{
+		wt, err = wintun.CreateAdapter("" ,ifname,nil)
+	}
 	if err != nil {
 		return nil, fmt.Errorf("Error creating interface: %w", err)
 	}
