@@ -22,6 +22,7 @@ func NewTun(ifname string,mtu int)(Device,error){
 	}
 	var wt *wintun.Adapter
 	if ifceExist{
+		fmt.Println("opening")
 		wt, err = wintun.OpenAdapter(ifname)
 	}else{
 		wt, err = wintun.CreateAdapter("" ,ifname,nil)

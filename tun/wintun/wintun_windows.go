@@ -6,6 +6,7 @@
 package wintun
 
 import (
+	"time"
 	"log"
 	"runtime"
 	"syscall"
@@ -101,7 +102,11 @@ func OpenAdapter(name string) (wintun *Adapter, err error) {
 	if err != nil {
 		return
 	}
+	log.Println("opening")
+	time.Sleep(time.Second*3)
 	r0, _, e1 := syscall.Syscall(procWintunOpenAdapter.Addr(), 1, uintptr(unsafe.Pointer(name16)), 0, 0)
+	log.Println("opened")
+	time.Sleep(time.Second*3)
 	if r0 == 0 {
 		err = e1
 		return
